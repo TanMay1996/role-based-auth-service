@@ -63,10 +63,13 @@ exports.getToken = async (req, res, next) => {
 
 exports.removeToken = async (req, res, next) => {
     try {
-        let email = req.user.email;
-        let user = await User.findOne({ email });
-        user.authToken = "";
-        await user.save();
+        const {n,nModified,ok} = await User.updateOne({ _id: req.user.id }, { $set: { authToken: null } });
+        console.log(req.user,n,nModified,ok)
+        if(!nModified){
+            return res.status(400).send({
+                message: "User Already logged out!"
+            })
+        }
         return res.status(200).send({
             message: "Logged out!"
         })

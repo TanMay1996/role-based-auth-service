@@ -8,6 +8,9 @@
 		{
 			"name": "User - Sign Up",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -34,6 +37,85 @@
 			"response": []
 		},
 		{
+			"name": "User - Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {\r",
+							"    pm.environment.set('authToken', pm.response.json().token);\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "test@abc.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "qwe12345",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/users/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User - Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {\r",
+							"    pm.environment.set('authToken', '');\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "User - get all users",
 			"request": {
 				"method": "GET",
@@ -53,16 +135,38 @@
 			"response": []
 		},
 		{
+			"name": "Roles - Create new Role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"role\":\"user-basic\",\r\n    \"scopes\":[\"60670adffc443a2578b9cfb5\",\"60670aeafc443a2578b9cfb6\",\"60670af5fc443a2578b9cfb7\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/roles/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"roles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Roles - get all roles",
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjYyNDljNGQzZGZjNTM1Y2M4ZGM0NSIsImZpcnN0bmFtZSI6IlRhbm1heSIsImxhc3RuYW1lIjoieWVydW5rYXIiLCJlbWFpbCI6InRlc3RAYWJjLmNvbSIsInNjb3BlcyI6WyJVU0VSLlJFQUQiLCJVU0VSLkNSRUFURSIsIlVTRVIuVVBEQVRFIiwiVVNFUi5ERUxFVEUiLCJST0xFLkNSRUFURSIsIlJPTEUuVVBEQVRFIiwiUk9MRS5SRUFEIiwiUk9MRS5ERUxFVEUiLCJTQ09QRS5DUkVBVEUiLCJTQ09QRS5SRUFEIiwiU0NPUEUuREVMRVRFIiwiU0NPUEUuVVBEQVRFIiwiTVlQUk9GSUxFLlJFQUQiLCJNWVBST0ZJTEUuVVBEQVRFIiwiTVlQUk9GSUxFLkRFTEVURSJdLCJyb2xlcyI6WyJhZG1pbiIsInVzZXItYmFzaWMiXSwiaWF0IjoxNjE3Mzc0NzE1LCJleHAiOjE2MTc0NjExMTV9.YLBGT3FhxFOfRwrFk6eo3xTite3QVfZoAmcdEP3cfq4",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"url": {
 					"raw": "localhost:8080/roles/",
 					"host": [
@@ -106,90 +210,10 @@
 			"response": []
 		},
 		{
-			"name": "Role - Create new Role",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjYyNDljNGQzZGZjNTM1Y2M4ZGM0NSIsImZpcnN0bmFtZSI6IlRhbm1heSIsImxhc3RuYW1lIjoieWVydW5rYXIiLCJlbWFpbCI6InRlc3RAYWJjLmNvbSIsInNjb3BlcyI6WyJVU0VSLlJFQUQiLCJVU0VSLkNSRUFURSIsIlVTRVIuVVBEQVRFIiwiVVNFUi5ERUxFVEUiLCJST0xFLkNSRUFURSIsIlJPTEUuVVBEQVRFIiwiUk9MRS5SRUFEIiwiUk9MRS5ERUxFVEUiLCJTQ09QRS5DUkVBVEUiLCJTQ09QRS5SRUFEIiwiU0NPUEUuREVMRVRFIiwiU0NPUEUuVVBEQVRFIiwiTVlQUk9GSUxFLlJFQUQiLCJNWVBST0ZJTEUuVVBEQVRFIiwiTVlQUk9GSUxFLkRFTEVURSJdLCJyb2xlcyI6WyJhZG1pbiIsInVzZXItYmFzaWMiXSwiaWF0IjoxNjE3Mzc0NzE1LCJleHAiOjE2MTc0NjExMTV9.YLBGT3FhxFOfRwrFk6eo3xTite3QVfZoAmcdEP3cfq4",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"role\":\"user-basic\",\r\n    \"scopes\":[\"60670adffc443a2578b9cfb5\",\"60670aeafc443a2578b9cfb6\",\"60670af5fc443a2578b9cfb7\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/roles/",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"roles",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User - Login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "email",
-							"value": "test@abc.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "qwe12345",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "localhost:8080/users/login",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"users",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Scopes - get all Scopes",
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
 				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjczMWE0Y2Y5ZmZiNzA5MDIxYzY1NiIsImZpcnN0bmFtZSI6IlRhbm1heSIsImxhc3RuYW1lIjoiWWVydW5rYXIiLCJlbWFpbCI6InRlc3RAYWJjLmNvbSIsInNjb3BlcyI6WyJNWVBST0ZJTEUuUkVBRCIsIk1ZUFJPRklMRS5VUERBVEUiLCJNWVBST0ZJTEUuREVMRVRFIiwiVVNFUi5SRUFEIiwiVVNFUi5DUkVBVEUiLCJVU0VSLlVQREFURSIsIlVTRVIuREVMRVRFIiwiUk9MRS5DUkVBVEUiLCJST0xFLlVQREFURSIsIlJPTEUuUkVBRCIsIlJPTEUuREVMRVRFIiwiU0NPUEUuQ1JFQVRFIiwiU0NPUEUuUkVBRCIsIlNDT1BFLkRFTEVURSIsIlNDT1BFLlVQREFURSJdLCJyb2xlcyI6WyJ1c2VyLWJhc2ljIiwiYWRtaW4iXSwiaWF0IjoxNjE3MzgxNDIzLCJleHAiOjE2MTc0Njc4MjN9.W9ztspFnNHxfjE__hzCJyTnBZ4PT4tHCgtV3yJS8wtc",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"url": {
 					"raw": "localhost:8080/scopes/",
 					"host": [
@@ -203,31 +227,36 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		},
 		{
-			"name": "User - Logout",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNjYyNDljNGQzZGZjNTM1Y2M4ZGM0NSIsImZpcnN0bmFtZSI6IlRhbm1heSIsImxhc3RuYW1lIjoieWVydW5rYXIiLCJlbWFpbCI6InRlc3RAYWJjLmNvbSIsInNjb3BlcyI6WyJBUFAuQ1JFQVRFIiwiQVBQLkNSRUFURSIsIkFQUC5GSU5EIl0sInJvbGVzIjpbImFkbWluIl0sImlhdCI6MTYxNzMwODIzOCwiZXhwIjoxNjE3Mzk0NjM4fQ.yKzJUUcmjWbpOR8xDrtnZDx8fB82hkeu6K1nwpjHBEI",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "localhost:8080/users/logout",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"users",
-						"logout"
-					]
-				}
-			},
-			"response": []
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
